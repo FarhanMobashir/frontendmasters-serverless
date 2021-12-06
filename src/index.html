@@ -60,23 +60,27 @@
 
 <template id="movie-template">
   <div class="movie">
-    <img src="" alt="">
+    <img src="" alt="" />
     <h2></h2>
     <p class="tagline"></p>
     <h3>View Ratings</h3>
     <ul class="scores"></ul>
   </div>
 </template>
-
+<!-- netlify identity -->
+<script
+  type="text/javascript"
+  src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+></script>
 <script>
-
-  function addScores(element,scores) {
+  function addScores(element, scores) {
     scores.forEach((score) => {
       const item = document.createElement("li");
       const label = document.createElement("span");
       label.classList.add("source");
       // shortening the long name
-      label.innerText = score.Source === "Internet Movie Database" ? "IMBD" : score.Source;
+      label.innerText =
+        score.Source === "Internet Movie Database" ? "IMBD" : score.Source;
       item.appendChild(label);
 
       const value = document.createElement("span");
@@ -85,20 +89,20 @@
 
       const scoreElement = element.querySelector(".scores");
       scoreElement.appendChild(item);
-
-    }) 
+    });
   }
 
   async function initialize() {
-    const movies = await fetch("/.netlify/functions/movies")
-    .then((response) => response.json());
-    
+    const movies = await fetch("/.netlify/functions/movies").then((response) =>
+      response.json()
+    );
+
     const container = document.querySelector(".movies");
     const template = document.querySelector("#movie-template");
 
     movies.forEach((movie) => {
       const element = template.content.cloneNode(true);
-      
+
       const img = element.querySelector("img");
       img.src = movie.poster;
       img.alt = movie.title;
@@ -106,12 +110,11 @@
       element.querySelector("h2").innerText = movie.title;
       element.querySelector(".tagline").innerText = movie.tagline;
 
-      addScores(element,movie.scores);
+      addScores(element, movie.scores);
 
       container.appendChild(element);
     });
   }
 
   initialize();
-
 </script>
